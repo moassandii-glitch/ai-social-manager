@@ -34,5 +34,114 @@ button{background:#111827;color:#fff;font-weight:bold}.pause{background:#dc2626}
 <script>
 function run(){status.textContent='● AI ACTIVE';msg.textContent='Perintah diterima: '+cmd.value}
 function pause(){status.textContent='● AI PAUSED';msg.textContent='AI dijeda.'}
+  <script>
+function runAI() {
+  const command = document.getElementById("command").value.trim();
+  const status = document.getElementById("status");
+  const message = document.getElementById("message");
+  const decision = document.getElementById("decision");
+
+  if (!command) {
+    message.textContent = "Silakan masukkan perintah terlebih dahulu.";
+    return;
+  }
+
+  status.textContent = "● AI ACTIVE";
+  message.textContent = "Berhasil memproses perintah!";
+
+  const hook = [
+    "Kuliner Jogja ini wajib masuk daftar buruanmu!",
+    "Siapa sangka, ada kuliner menarik seperti ini di Jogja?",
+    "Kalau main ke Jogja, jangan cuma cari gudeg!",
+    "Lagi cari kuliner enak di Jogja? Coba cek tempat ini!"
+  ];
+
+  const topik = [
+    "Rekomendasi kuliner murah di Jogja",
+    "Kuliner tersembunyi yang menarik untuk dicoba",
+    "Makanan khas Jogja yang wajib masuk wishlist",
+    "Tempat makan favorit untuk berburu kuliner"
+  ];
+
+  const pilih = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  const hasil = Array.from({ length: 2 }, (_, i) => {
+    const judul = pilih(topik);
+    const pembuka = pilih(hook);
+    const jam = i === 0 ? "10:00" : "19:00";
+
+    return `
+      <div style="
+        background:#f8fafc;
+        padding:15px;
+        border-radius:10px;
+        margin:12px 0;
+        border:1px solid #e5e7eb;
+      ">
+        <h3>Konten ${i + 1}: ${judul}</h3>
+        <p><b>Hook:</b> ${pembuka}</p>
+        <p><b>Ide video:</b> Buat video pendek yang
+        memperlihatkan makanan, suasana tempat, harga,
+        dan pengalaman saat berkunjung.</p>
+        <p><b>Caption:</b> Lagi berburu kuliner di Jogja!
+        Simpan rekomendasi ini untuk kunjunganmu berikutnya.
+        Menurutmu, kuliner apa lagi yang wajib dicoba?</p>
+        <p><b>Hashtag:</b>
+        #KulinerJogja #WisataKuliner #JogjaFood</p>
+        <p><b>Rencana posting:</b> Besok pukul ${jam}</p>
+        <button onclick="salinKonten(this)">Salin Konten</button>
+        <textarea class="hasil-konten" style="display:none;">${judul}
+
+Hook: ${pembuka}
+
+Ide video: Tampilkan makanan, suasana, harga, dan pengalaman berkunjung.
+
+Caption: Lagi berburu kuliner di Jogja! Simpan rekomendasi ini untuk kunjunganmu berikutnya. Menurutmu, kuliner apa lagi yang wajib dicoba?
+
+#KulinerJogja #WisataKuliner #JogjaFood</textarea>
+      </div>
+    `;
+  }).join("");
+
+  decision.innerHTML = `
+    <h3>Hasil AI Social Manager</h3>
+    <p><b>Perintah:</b> ${escapeHTML(command)}</p>
+    <p>Berikut dua contoh konsep konten yang dihasilkan
+    berdasarkan template lokal dashboard.</p>
+    ${hasil}
+    <p><i>Catatan: hasil ini dibuat dari template JavaScript,
+    bukan dari AI sungguhan atau data tren terkini.</i></p>
+  `;
+}
+
+function escapeHTML(text) {
+  return text.replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+async function salinKonten(button) {
+  const textarea = button.parentElement.querySelector(".hasil-konten");
+
+  try {
+    await navigator.clipboard.writeText(textarea.value);
+    button.textContent = "Berhasil Disalin!";
+  } catch (error) {
+    textarea.style.display = "block";
+    textarea.focus();
+    textarea.select();
+    button.textContent = "Pilih lalu Salin";
+  }
+}
+
+function pauseAI() {
+  document.getElementById("status").textContent = "● AI PAUSED";
+  document.getElementById("message").textContent =
+    "Dashboard dijeda. Klik Jalankan AI untuk membuat hasil baru.";
+}
 </script>
 </body></html>
